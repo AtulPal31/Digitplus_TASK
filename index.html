@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 20px;
+    }
+
+    #tree-container {
+      max-width: 600px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .tree-node {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    .child-node {
+      background-color: #b3d7ff;
+    }
+
+    .parent-node {
+      background-color: #d4fca8;
+    }
+
+    .tree-node:hover {
+      background-color: #e9ecef;
+    }
+
+    .add-btn, .parent-btn, .update-btn, .delete-btn {
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    .add-btn:hover, .parent-btn:hover, .update-btn:hover, .delete-btn:hover {
+      color: #0056b3;
+    }
+
+    .tree-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+
+    .tree-list:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      border-left: 1px solid #dee2e6;
+      height: 100%;
+    }
+
+    .tree-node::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -10px;
+      border-top: 1px solid #dee2e6;
+      width: 10px;
+      height: 100%;
+    }
+
+    .child-node::before,
+    .parent-node::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -10px;
+      border-top: 1px solid #dee2e6;
+      width: 10px;
+      height: 100%;
+    }
+
+    .tree-node:first-child::before {
+      top: 10px;
+    }
+
+    .child-node:first-child::before,
+    .parent-node:first-child::before {
+      top: 10px;
+    }
+
+    .tree-node:last-child::before {
+      height: 10px;
+    }
+
+    .child-node:last-child::before,
+    .parent-node:last-child::before {
+      height: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div id="tree-container">
+        <ul class="tree-list">
+          <li class="tree-node parent-node" data-node-type="root">Root Node
+            <button class="add-btn" onclick="addChildNode(this)">Add Child Node</button>
+            <button class="parent-btn" onclick="addParentNode(this)">Create New Parent</button>
+            <button class="update-btn" onclick="updateNode(this)">Update</button>
+            <button class="delete-btn" onclick="deleteNode(this)">Delete</button>
+            <ul class="tree-list"></ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function addChildNode(btn) {
+    const nodeType = prompt("Enter node type (Single Node, Child Node, Parent Node):") || "Single Node";
+    const parentNode = $(btn).closest('.tree-node');
+
+    const newNode = $("<li>")
+      .addClass("tree-node child-node")
+      .attr('data-node-type', nodeType.toLowerCase())
+      .text(nodeType + " Node")
+      .append("<button class='add-btn' onclick='addChildNode(this)'>Add Child Node</button>")
+      .append("<button class='parent-btn' onclick='addParentNode(this)'>Create New Parent</button>")
+      .append("<button class='update-btn' onclick='updateNode(this)'>Update</button>")
+      .append("<button class='delete-btn' onclick='deleteNode(this)'>Delete</button>")
+      .append("<ul class='tree-list'></ul>");
+
+    parentNode.children('ul').append(newNode);
+  }
+
+  function addParentNode(btn) {
+    const nodeType = prompt("Enter node type (Single Node, Child Node, Parent Node):") || "Single Node";
+    const currentNode = $(btn).closest('.tree-node');
+
+    const newNode = $("<li>")
+      .addClass("tree-node parent-node")
+      .attr('data-node-type', nodeType.toLowerCase())
+      .text(nodeType + " Node")
+      .append("<button class='add-btn' onclick='addChildNode(this)'>Add Child Node</button>")
+      .append("<button class='parent-btn' onclick='addParentNode(this)'>Create New Parent</button>")
+      .append("<button class='update-btn' onclick='updateNode(this)'>Update</button>")
+      .append("<button class='delete-btn' onclick='deleteNode(this)'>Delete</button>")
+      .append("<ul class='tree-list'></ul>");
+
+    const newParentNode = $("<li>")
+      .addClass("tree-node parent-node")
+      .append(newNode);
+
+    currentNode.after(newParentNode);
+  }
+
+  function updateNode(btn) {
+    const currentNode = $(btn).closest('.tree-node');
+    const newText = prompt("Enter new text for the node:", currentNode.text()) || "Node";
+
+    currentNode.text(newText + " Node");
+  }
+
+  function deleteNode(btn) {
+    const currentNode = $(btn).closest('.tree-node');
+    currentNode.remove();
+  }
+</script>
+
+</body>
+</html>
